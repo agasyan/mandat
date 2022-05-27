@@ -3,6 +3,8 @@ import numpy as np
 from faker import Faker
 from datetime import  datetime, timedelta
 import json
+import pymongo
+import urllib.parse
 
 
 def main():
@@ -164,6 +166,17 @@ def main():
         v = ",".join(getValues(i))
         f.write(f"INSERT INTO pengeluaran({k}) VALUES({v});\n")
     f.close()
+
+    import_mongo = False
+    if import_mongo:
+        username = urllib.parse.quote_plus('mandat')
+        password = urllib.parse.quote_plus('mandat')
+        myclient = pymongo.MongoClient('mongodb://%s:%s@localhost:27017/mandat-db' % (username, password))
+        mydb = myclient["mandat-db"]
+        mycol = mydb["projects"]
+        x = mycol.insert_many(proj_new_dct_arr)
+        #print list of the _id values of the inserted documents:
+        print(x.inserted_ids)
 
 def randomList(length, sum):
     arr = [0] * length

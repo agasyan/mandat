@@ -13,12 +13,15 @@ services:
   mongodb_container:
     image: mongo:latest
     environment:
-      MONGO_INITDB_ROOT_USERNAME: mandat
-      MONGO_INITDB_ROOT_PASSWORD: mandat
+      - MONGO_INITDB_DATABASE=mandat-db
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=admin
     ports:
       - 27017:27017
     volumes:
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
       - mongodb_data_container:/data/db
+      
 
 volumes:
   db:

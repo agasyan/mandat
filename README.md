@@ -59,13 +59,15 @@ Insert `https://www.mongodb.com/docs/manual/reference/method/db.collection.inser
 
 Connect to mongodb
 ```
-mongosh "mongodb://localhost:27017" --username mandat --password mandat --authenticationDatabase admin
+mongosh "mongodb://localhost:27017" --username root --password admin --authenticationDatabase admin
+mongosh "mongodb://localhost:27017" --username mandat --password mandat --authenticationDatabase mandat-db
 ```
 
 check dbs / collections
 ```
 show dbs
 show collections
+use mandat-db
 ```
 
 create new database
