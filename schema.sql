@@ -38,14 +38,14 @@ CREATE TABLE project(
    id_client INT NOT NULL,
    id_project_manager INT NOT NULL,
    project_name VARCHAR(255) NOT NULL,
-   project_value real NOT NULL,
+   project_value INT NOT NULL,
    project_description text not null,
-   start_date DATE not null,
-   end_date DATE not null,
+   start_date TIMESTAMP not null,
+   end_date TIMESTAMP not null,
    id_project_status INT NOT NULL,
    FOREIGN KEY (id_project_status) REFERENCES project_status (id_project_status),
    FOREIGN KEY (id_project_manager) REFERENCES karyawan (id_karyawan),
-   FOREIGN KEY (id_client) REFERENCES client (id_client),
+   FOREIGN KEY (id_client) REFERENCES client (id_client)
 );
 
 DROP TABLE IF EXISTS invoice;
@@ -53,10 +53,10 @@ CREATE TABLE invoice(
    id_invoice INT PRIMARY KEY,
    id_project INT NOT NULL,
    invoice_desc TEXT NOT NULL,
-   payment_value real NOT NULL,
+   payment_value INT NOT NULL,
    id_invoice_status INT NOT NULL,
    FOREIGN KEY (id_invoice_status) REFERENCES invoice_status (id_invoice_status),
-   FOREIGN KEY (id_project) REFERENCES project_id (id_project),
+   FOREIGN KEY (id_project) REFERENCES project (id_project)
 );
 
 DROP TABLE IF EXISTS pengeluaran;
@@ -65,8 +65,8 @@ CREATE TABLE pengeluaran(
    id_project INT NOT NULL,
    pengeluaran_name VARCHAR(255) NOT NULL,
    pengeluaran_desc TEXT NOT NULL,
-   pengeluaran_value real NOT NULL,
-   id_pengeluaran_status INT NOT NULL,
-   FOREIGN KEY (id_pengeluaran_status) REFERENCES pengeluaran_status (id_pengeluaran_status),
-   FOREIGN KEY (id_project) REFERENCES project_id (id_project),
+   pengeluaran_value INT NOT NULL,
+   id_tipe_pengeluaran INT NOT NULL,
+   FOREIGN KEY (id_tipe_pengeluaran) REFERENCES tipe_pengeluaran (id_tipe_pengeluaran),
+   FOREIGN KEY (id_project) REFERENCES project (id_project)
 );
