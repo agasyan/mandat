@@ -10,6 +10,16 @@ services:
       - '5432:5432'
     volumes: 
       - db:/var/lib/postgresql/data
+  mongodb_container:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mandat
+      MONGO_INITDB_ROOT_PASSWORD: mandat
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data_container:/data/db
 
 volumes:
   db:
+  mongodb_data_container:

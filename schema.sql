@@ -27,8 +27,9 @@ CREATE TABLE karyawan(
 DROP TABLE IF EXISTS client;
 CREATE TABLE client(
    id_client INT PRIMARY KEY,
-   nama VARCHAR(255) UNIQUE NOT NULL,
-   email VARCHAR(255) UNIQUE NOT NULL
+   client_nama VARCHAR(255) UNIQUE NOT NULL,
+   client_email VARCHAR(255) UNIQUE NOT NULL,
+   client_company VARCHAR(255) UNIQUE NOT NULL
 );
 
 DROP TABLE IF EXISTS project;
