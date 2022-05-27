@@ -3,6 +3,7 @@ from traceback import print_tb
 import numpy as np
 from faker import Faker
 from datetime import  datetime, timedelta
+import json
 
 
 def main():
@@ -54,30 +55,39 @@ def main():
     pengeluaran_arr = []
     goods = ["food", "clothes", "car", "motorcycle"]
 
+    proj_new_dct_arr = []
     for _ in range(n):
         dct = {}
         sdate = date_arr.pop(0)
         end_date = sdate + timedelta(days=random.randrange(30, 360, 30))
-        dct["id_project"] = id_pro
         dct["project_name"] = f"{fake.safe_color_name()} {random.choice(goods)} from {cleanStr(fake.country())} to {cleanStr(fake.country())}"
         dct["project_value"] = random.randrange(10000000, 1000000000, 1000000)
         dct["project_description"] = fake.paragraph(nb_sentences=2)
         dct["start_date"] = sdate
         dct["end_date"] = end_date
-        print(type(sdate))
-        print(type(end_date))
-        # new_dct for json obj
-        new_dct = dct.copy()
+        dct["id_project"] = id_pro
+
+        # get 
         ps =  np.random.choice(ps_arr, p=[0.6, 0.2, 0.2])
         client = random.choice(client_arr)
         pm = random.choice(karyawan_arr)
+
+        # new_dct for json obj
+        new_dct = dct.copy()
+        new_dct["_id"] = id_pro
+        new_dct["project_status"] = ps
+        new_dct["client"] = client
+        new_dct["project_manager"] = pm
+        
+        
         dct["id_client"] = client["id_client"]
         dct["id_project_manager"] = pm["id_karyawan"]
         dct["id_project_status"] = ps["id_project_status"]
         proj_arr.append(dct)
         id_pro += 1
         # Done
-        print(dct)
+        proj_inv_arr = [] 
+        proj_klr_arr = []
         if ps["id_project_status"] != 2:
             # Generate Invoice
             inv_count = random.randrange(1, 4)
@@ -92,7 +102,7 @@ def main():
                 if ps["id_project_status"] == 1 :
                     inv["id_invoice_status"] = ivs_arr[0]["id_invoice_status"]
                 inv_arr.append(inv)
-                print(inv)
+                proj_inv_arr.append(inv)
                 id_inv += 1
     
             # Generate Pengeluaran
@@ -109,11 +119,18 @@ def main():
                 pengeluaran["pengeluaran_value"] = (dct["project_value"] * split_pglrn[i]) // 100
                 pengeluaran["id_tipe_pengeluaran"] = tpeng["id_tipe_pengeluaran"]
                 pengeluaran_arr.append(pengeluaran)
-                print(pengeluaran)
+                proj_klr_arr.append(pengeluaran)
                 id_pengeluaran += 1
+            new_dct["invoice"] = proj_inv_arr
+            new_dct["pengeluaran"] = proj_klr_arr
+        proj_new_dct_arr.append(new_dct)
 
     
 
+    # convert into json
+    # file name is mydata
+    with open("out.json", "w") as final:
+        json.dump(proj_new_dct_arr, final, default=json_serial)
     f = open("out.sql", "w")
     for i in ivs_arr:
         k = ",".join(list(i.keys()))
@@ -186,6 +203,13 @@ def random_date_time_list_sorted(n):
         date_arr.append(random_date)
     date_arr.sort()
     return date_arr
+
+def json_serial(obj):
+    """JSON serializer for objects not serializable by default json code"""
+
+    if isinstance(obj, (datetime)):
+        return obj.isoformat()
+    raise TypeError ("Type %s not serializable" % type(obj))
 
 if __name__ == "__main__":
     main()
