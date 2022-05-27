@@ -1,5 +1,4 @@
 import random
-from traceback import print_tb
 import numpy as np
 from faker import Faker
 from datetime import  datetime, timedelta
@@ -9,7 +8,7 @@ import json
 def main():
     fake = Faker()
     # project num
-    n = 10
+    n = 50
 
     # table_name karyawan
     id_k = 1
