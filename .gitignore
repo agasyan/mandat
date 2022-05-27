@@ -129,4 +129,4 @@ dmypy.json
 .pyre/
 
 out.sql
-out.json
+out_json/

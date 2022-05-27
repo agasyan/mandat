@@ -1,30 +1,35 @@
 -- psql -U mandat -h localhost -p 5432
+
+DROP TABLE IF EXISTS pengeluaran;
+DROP TABLE IF EXISTS invoice;
+DROP TABLE IF EXISTS project;
+DROP TABLE IF EXISTS client;
+DROP TABLE IF EXISTS karyawan;
+DROP TABLE IF EXISTS project_status;
+DROP TABLE IF EXISTS tipe_pengeluaran;
 DROP TABLE IF EXISTS invoice_status;
+
 CREATE TABLE invoice_status(
    id_invoice_status INT PRIMARY KEY,
    invoice_status_name VARCHAR(255) UNIQUE NOT NULL
 );
 
-DROP TABLE IF EXISTS tipe_pengeluaran;
 CREATE TABLE tipe_pengeluaran(
    id_tipe_pengeluaran INT PRIMARY KEY,
    tipe_pengeluaran_name VARCHAR(255) UNIQUE NOT NULL
 );
 
-DROP TABLE IF EXISTS project_status;
 CREATE TABLE project_status(
    id_project_status INT PRIMARY KEY,
    project_status_name VARCHAR(255) UNIQUE NOT NULL
 );
 
-DROP TABLE IF EXISTS karyawan;
 CREATE TABLE karyawan(
    id_karyawan INT PRIMARY KEY,
    karyawan_nama VARCHAR(255) UNIQUE NOT NULL,
    karyawan_email VARCHAR(255) UNIQUE NOT NULL
 );
 
-DROP TABLE IF EXISTS client;
 CREATE TABLE client(
    id_client INT PRIMARY KEY,
    client_nama VARCHAR(255) UNIQUE NOT NULL,
@@ -32,7 +37,6 @@ CREATE TABLE client(
    client_company VARCHAR(255) UNIQUE NOT NULL
 );
 
-DROP TABLE IF EXISTS project;
 CREATE TABLE project(
    id_project INT PRIMARY KEY,
    id_client INT NOT NULL,
@@ -48,7 +52,6 @@ CREATE TABLE project(
    FOREIGN KEY (id_client) REFERENCES client (id_client)
 );
 
-DROP TABLE IF EXISTS invoice;
 CREATE TABLE invoice(
    id_invoice INT PRIMARY KEY,
    id_project INT NOT NULL,
@@ -59,7 +62,6 @@ CREATE TABLE invoice(
    FOREIGN KEY (id_project) REFERENCES project (id_project)
 );
 
-DROP TABLE IF EXISTS pengeluaran;
 CREATE TABLE pengeluaran(
    id_pengeluaran INT PRIMARY KEY,
    id_project INT NOT NULL,
