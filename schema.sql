@@ -34,7 +34,7 @@ CREATE TABLE client(
    id_client INT PRIMARY KEY,
    client_nama VARCHAR(255) UNIQUE NOT NULL,
    client_email VARCHAR(255) UNIQUE NOT NULL,
-   client_company VARCHAR(255) UNIQUE NOT NULL
+   client_company VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE project(

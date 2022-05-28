@@ -46,6 +46,12 @@ list relations
 \l
 ```
 
+run sql
+```
+\i kuliah/1/mandat/schema.sql
+\i kuliah/1/mandat/out.sql
+```
+
 Quit
 `ctrl+D`
 

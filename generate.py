@@ -12,6 +12,8 @@ def main():
     # project num
     n = 50
 
+    start = datetime.now()
+
     # table_name karyawan
     id_k = 1
     karyawan_arr = []
@@ -37,7 +39,7 @@ def main():
         last_name = fake.last_name()
         dct["client_nama"] = cleanStr(f"{first_name} {last_name}")
         dct["client_email"] = f"{(first_name).lower()}.{(last_name).lower()}@{fake.domain_name()}"
-        dct["client_company"] = fake.company()
+        dct["client_company"] = f"{fake.safe_color_name()} {fake.company()} {cleanStr(fake.country())}"
         client_arr.append(dct)
         id_c += 1
 
@@ -85,7 +87,6 @@ def main():
         dct["id_project_manager"] = pm["id_karyawan"]
         dct["id_project_status"] = ps["id_project_status"]
         proj_arr.append(dct)
-        id_pro += 1
         # Done
         proj_inv_arr = [] 
         proj_klr_arr = []
@@ -125,49 +126,103 @@ def main():
             new_dct["invoice"] = proj_inv_arr
             new_dct["pengeluaran"] = proj_klr_arr
         proj_new_dct_arr.append(new_dct)
-
-    
+        id_pro += 1
 
     # convert into json
     # file name is mydata
     with open("out.json", "w") as final:
         json.dump(proj_new_dct_arr, final, default=json_serial)
     f = open("out.sql", "w")
-    for i in ivs_arr:
-        k = ",".join(list(i.keys()))
-        v = ",".join(getValues(i))
-        f.write(f"INSERT INTO invoice_status({k}) VALUES({v});\n")
-    for i in tp_arr:
-        k = ",".join(list(i.keys()))
-        v = ",".join(getValues(i))
-        f.write(f"INSERT INTO tipe_pengeluaran({k}) VALUES({v});\n")
-    for i in ps_arr:
-        k = ",".join(list(i.keys()))
-        v = ",".join(getValues(i))
-        f.write(f"INSERT INTO project_status({k}) VALUES({v});\n")
-    for i in karyawan_arr:
-        k = ",".join(list(i.keys()))
-        v = ",".join(getValues(i))
-        f.write(f"INSERT INTO karyawan({k}) VALUES({v});\n")
-    for i in client_arr:
-        k = ",".join(list(i.keys()))
-        v = ",".join(getValues(i))
-        f.write(f"INSERT INTO client({k}) VALUES({v});\n")
-    for i in proj_arr:
-        k = ",".join(list(i.keys()))
-        v = ",".join(getValues(i))
-        f.write(f"INSERT INTO project({k}) VALUES({v});\n")
-    for i in inv_arr:
-        k = ",".join(list(i.keys()))
-        v = ",".join(getValues(i))
-        f.write(f"INSERT INTO invoice({k}) VALUES({v});\n")
-    for i in pengeluaran_arr:
-        k = ",".join(list(i.keys()))
-        v = ",".join(getValues(i))
-        f.write(f"INSERT INTO pengeluaran({k}) VALUES({v});\n")
+    for chnk in chunks(ivs_arr, 100):
+        k = ""
+        v_arr = []
+        for item in chnk: 
+            k = ",".join(list(item.keys()))
+            v = ",".join(getValues(item))
+            v = f"({v})"
+            v_arr.append(v)
+        vals = ",".join(v_arr)
+        f.write(f"INSERT INTO invoice_status({k}) VALUES {vals};\n")
+    for chnk in chunks(tp_arr, 100):
+        k = ""
+        v_arr = []
+        for item in chnk: 
+            k = ",".join(list(item.keys()))
+            v = ",".join(getValues(item))
+            v = f"({v})"
+            v_arr.append(v)
+        vals = ",".join(v_arr)
+        f.write(f"INSERT INTO tipe_pengeluaran({k}) VALUES {vals};\n")
+    for chnk in chunks(ps_arr, 100):
+        k = ""
+        v_arr = []
+        for item in chnk: 
+            k = ",".join(list(item.keys()))
+            v = ",".join(getValues(item))
+            v = f"({v})"
+            v_arr.append(v)
+        vals = ",".join(v_arr)
+        f.write(f"INSERT INTO project_status({k}) VALUES {vals};\n")
+    for chnk in chunks(karyawan_arr, 100):
+        k = ""
+        v_arr = []
+        for item in chnk: 
+            k = ",".join(list(item.keys()))
+            v = ",".join(getValues(item))
+            v = f"({v})"
+            v_arr.append(v)
+        vals = ",".join(v_arr)
+        f.write(f"INSERT INTO karyawan({k}) VALUES {vals};\n")
+    for chnk in chunks(client_arr, 100):
+        k = ""
+        v_arr = []
+        for item in chnk: 
+            k = ",".join(list(item.keys()))
+            v = ",".join(getValues(item))
+            v = f"({v})"
+            v_arr.append(v)
+        vals = ",".join(v_arr)
+        f.write(f"INSERT INTO client({k}) VALUES {vals};\n")
+    for chnk in chunks(proj_arr, 100):
+        k = ""
+        v_arr = []
+        for item in chnk: 
+            k = ",".join(list(item.keys()))
+            v = ",".join(getValues(item))
+            v = f"({v})"
+            v_arr.append(v)
+        vals = ",".join(v_arr)
+        f.write(f"INSERT INTO project({k}) VALUES {vals};\n")
+    for chnk in chunks(inv_arr, 100):
+        k = ""
+        v_arr = []
+        for item in chnk: 
+            k = ",".join(list(item.keys()))
+            v = ",".join(getValues(item))
+            v = f"({v})"
+            v_arr.append(v)
+        vals = ",".join(v_arr)
+        f.write(f"INSERT INTO invoice({k}) VALUES {vals};\n")
+    for chnk in chunks(pengeluaran_arr, 100):
+        k = ""
+        v_arr = []
+        for item in chnk: 
+            k = ",".join(list(item.keys()))
+            v = ",".join(getValues(item))
+            v = f"({v})"
+            v_arr.append(v)
+        vals = ",".join(v_arr)
+        f.write(f"INSERT INTO pengeluaran({k}) VALUES {vals};\n")
     f.close()
 
+    end = datetime.now()
+    res = end - start
+    print(res)
+    res_ms = int(res.total_seconds() * 1000) # milliseconds
+    print(res_ms)
+
     import_mongo = False
+    smdb = datetime.now()
     if import_mongo:
         username = urllib.parse.quote_plus('mandat')
         password = urllib.parse.quote_plus('mandat')
@@ -177,6 +232,10 @@ def main():
         x = mycol.insert_many(proj_new_dct_arr)
         #print list of the _id values of the inserted documents:
         print(x.inserted_ids)
+    emdb = datetime.now()
+    res = emdb - smdb
+    res_ms = int(res.total_seconds() * 1000) # milliseconds
+    print(res_ms)
 
 def randomList(length, sum):
     arr = [0] * length
@@ -215,6 +274,10 @@ def random_date_time_list_sorted(n):
         date_arr.append(random_date)
     date_arr.sort()
     return date_arr
+
+def chunks(l, n):
+    n = max(1, n)
+    return (l[i:i+n] for i in range(0, len(l), n))
 
 def json_serial(obj):
     """JSON serializer for objects not serializable by default json code"""
