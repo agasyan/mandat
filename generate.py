@@ -10,7 +10,7 @@ import urllib.parse
 def main():
     fake = Faker()
     # project num
-    n = 50
+    n = 100000
 
     start = datetime.now()
 
@@ -22,7 +22,8 @@ def main():
         dct["id_karyawan"] = id_k
         gender = np.random.choice(["M", "F"], p=[0.5, 0.5])
         first_name = fake.first_name_male() if gender =="M" else fake.first_name_female()
-        last_name = fake.last_name()
+        last_name = f"{fake.last_name()}{id_k}"
+        first_name = f"{first_name}"
         dct["karyawan_nama"] = f"{first_name} {last_name}"
         dct["karyawan_email"] = f"{(first_name).lower()}.{(last_name).lower()}@{fake.domain_name()}"
         karyawan_arr.append(dct)
@@ -36,7 +37,8 @@ def main():
         dct["id_client"] = id_c
         gender = np.random.choice(["M", "F"], p=[0.5, 0.5])
         first_name = fake.first_name_male() if gender =="M" else fake.first_name_female()
-        last_name = fake.last_name()
+        last_name = f"{fake.last_name()}{id_c}"
+        first_name = f"{first_name}"
         dct["client_nama"] = cleanStr(f"{first_name} {last_name}")
         dct["client_email"] = f"{(first_name).lower()}.{(last_name).lower()}@{fake.domain_name()}"
         dct["client_company"] = f"{fake.safe_color_name()} {fake.company()} {cleanStr(fake.country())}"
@@ -130,10 +132,9 @@ def main():
 
     # convert into json
     # file name is mydata
-    with open("out.json", "w") as final:
-        json.dump(proj_new_dct_arr, final, default=json_serial)
+    batch_size = 100
     f = open("out.sql", "w")
-    for chnk in chunks(ivs_arr, 100):
+    for chnk in chunks(ivs_arr, batch_size):
         k = ""
         v_arr = []
         for item in chnk: 
@@ -143,7 +144,7 @@ def main():
             v_arr.append(v)
         vals = ",".join(v_arr)
         f.write(f"INSERT INTO invoice_status({k}) VALUES {vals};\n")
-    for chnk in chunks(tp_arr, 100):
+    for chnk in chunks(tp_arr, batch_size):
         k = ""
         v_arr = []
         for item in chnk: 
@@ -153,7 +154,7 @@ def main():
             v_arr.append(v)
         vals = ",".join(v_arr)
         f.write(f"INSERT INTO tipe_pengeluaran({k}) VALUES {vals};\n")
-    for chnk in chunks(ps_arr, 100):
+    for chnk in chunks(ps_arr, batch_size):
         k = ""
         v_arr = []
         for item in chnk: 
@@ -163,7 +164,7 @@ def main():
             v_arr.append(v)
         vals = ",".join(v_arr)
         f.write(f"INSERT INTO project_status({k}) VALUES {vals};\n")
-    for chnk in chunks(karyawan_arr, 100):
+    for chnk in chunks(karyawan_arr, batch_size):
         k = ""
         v_arr = []
         for item in chnk: 
@@ -173,7 +174,7 @@ def main():
             v_arr.append(v)
         vals = ",".join(v_arr)
         f.write(f"INSERT INTO karyawan({k}) VALUES {vals};\n")
-    for chnk in chunks(client_arr, 100):
+    for chnk in chunks(client_arr, batch_size):
         k = ""
         v_arr = []
         for item in chnk: 
@@ -183,7 +184,7 @@ def main():
             v_arr.append(v)
         vals = ",".join(v_arr)
         f.write(f"INSERT INTO client({k}) VALUES {vals};\n")
-    for chnk in chunks(proj_arr, 100):
+    for chnk in chunks(proj_arr, batch_size):
         k = ""
         v_arr = []
         for item in chnk: 
@@ -193,7 +194,7 @@ def main():
             v_arr.append(v)
         vals = ",".join(v_arr)
         f.write(f"INSERT INTO project({k}) VALUES {vals};\n")
-    for chnk in chunks(inv_arr, 100):
+    for chnk in chunks(inv_arr, batch_size):
         k = ""
         v_arr = []
         for item in chnk: 
@@ -203,7 +204,7 @@ def main():
             v_arr.append(v)
         vals = ",".join(v_arr)
         f.write(f"INSERT INTO invoice({k}) VALUES {vals};\n")
-    for chnk in chunks(pengeluaran_arr, 100):
+    for chnk in chunks(pengeluaran_arr, batch_size):
         k = ""
         v_arr = []
         for item in chnk: 
@@ -221,7 +222,7 @@ def main():
     res_ms = int(res.total_seconds() * 1000) # milliseconds
     print(res_ms)
 
-    import_mongo = False
+    import_mongo = True
     smdb = datetime.now()
     if import_mongo:
         username = urllib.parse.quote_plus('mandat')
@@ -235,6 +236,7 @@ def main():
     emdb = datetime.now()
     res = emdb - smdb
     res_ms = int(res.total_seconds() * 1000) # milliseconds
+    print("total input time")
     print(res_ms)
 
 def randomList(length, sum):

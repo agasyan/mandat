@@ -129,6 +129,6 @@ dmypy.json
 .pyre/
 
 out.sql
-out_json/
+out.json
 
 res*.txt
