@@ -48,8 +48,8 @@ CREATE TABLE project(
    end_date TIMESTAMP not null,
    id_project_status INT NOT NULL,
    FOREIGN KEY (id_project_status) REFERENCES project_status (id_project_status),
-   FOREIGN KEY (id_project_manager) REFERENCES karyawan (id_karyawan),
-   FOREIGN KEY (id_client) REFERENCES client (id_client)
+   FOREIGN KEY (id_project_manager) REFERENCES karyawan (id_karyawan) ON DELETE CASCADE,
+   FOREIGN KEY (id_client) REFERENCES client (id_client) ON DELETE CASCADE
 );
 
 CREATE TABLE invoice(
